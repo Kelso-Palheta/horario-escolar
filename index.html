@@ -75,6 +75,12 @@
   .conflict-indicator { animation: pulse 2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
 
+  .light .bg-surface-800 { background: #e5e7eb !important; color: #1f2937 !important; }
+  .light .bg-surface-700 { background: #d1d5db !important; color: #1f2937 !important; }
+  .light .bg-red-600, .light .bg-green-600, .light .bg-blue-600 { color: white !important; }
+  .light .text-surface-400 { color: #6b7280 !important; }
+  .light .text-surface-100 { color: #1f2937 !important; }
+
   @media print {
     .no-print { display:none !important; }
     body { background:white !important; color:black !important; }
@@ -92,6 +98,14 @@
   .light button { color: #1f2937; }
   .light button:not(:disabled) { background: #e5e7eb; }
   .light button:hover { background: #d1d5db; }
+
+  .light .stat-card { background: #ffffff; border: 1px solid #e5e7eb; }
+  .light .badge { background: #dbeafe; color: #0284c7; }
+
+  .light div[style*="background: rgba(39,39,42"] { background: #f3f4f6 !important; }
+  .light div[class*="space-y"], .light div[class*="rounded-lg"] { color: #1f2937; }
+
+  .light [class*="bg-gray"], .light [class*="bg-slate"] { background: #f3f4f6 !important; color: #1f2937 !important; }
 </style>
 </head>
 <body class="bg-surface-950 text-surface-100 transition-colors duration-300">
