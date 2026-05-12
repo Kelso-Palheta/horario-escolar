@@ -147,6 +147,9 @@
       <button onclick="document.getElementById('loadFile').click()" class="w-full flex items-center gap-2 px-3 py-2 text-sm bg-surface-800 hover:bg-surface-700 rounded transition">
         <i data-lucide="upload" class="ico"></i> Importar JSON
       </button>
+      <button onclick="openSyncModal()" class="w-full flex items-center gap-2 px-3 py-2 text-sm bg-cyan-600/20 hover:bg-cyan-600/40 text-cyan-300 rounded transition">
+        <i data-lucide="cloud-upload" class="ico"></i> Nuvem
+      </button>
       <button onclick="toggleTheme()" class="w-full flex items-center gap-2 px-3 py-2 text-sm bg-surface-800 hover:bg-surface-700 rounded transition">
         <i data-lucide="palette" class="ico"></i> <span id="themeLabel">Modo claro</span>
       </button>
@@ -199,6 +202,29 @@
       <button onclick="clearSlot()" class="px-4 py-2 bg-red-600/20 text-red-300 hover:bg-red-600/40 rounded text-sm">Limpar</button>
       <button onclick="closeEdit()" class="px-4 py-2 bg-surface-800 hover:bg-surface-700 rounded text-sm">Cancelar</button>
       <button onclick="saveEdit()" class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-surface-950 font-semibold rounded text-sm">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sync Modal -->
+<div id="syncModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="glass rounded-xl p-6 w-full max-w-md animate-slide-in">
+    <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i data-lucide="cloud-upload" class="ico"></i> Sincronizar na Nuvem</h3>
+    <div class="space-y-4">
+      <div>
+        <label class="text-xs text-surface-400 font-medium block mb-1">Email</label>
+        <input id="syncEmail" type="email" placeholder="seu@email.com" class="w-full bg-surface-800 px-3 py-2 rounded border border-white/10">
+      </div>
+      <div>
+        <label class="text-xs text-surface-400 font-medium block mb-1">URL Servidor</label>
+        <input id="syncServer" type="text" placeholder="https://seu-dominio.vercel.app" class="w-full bg-surface-800 px-3 py-2 rounded border border-white/10" value="https://horario-escolar-git-main-seu.vercel.app">
+      </div>
+      <div id="syncStatus" class="text-xs text-surface-400"></div>
+    </div>
+    <div class="flex justify-end gap-2 mt-6">
+      <button onclick="closeSyncModal()" class="px-4 py-2 bg-surface-800 hover:bg-surface-700 rounded text-sm">Cancelar</button>
+      <button onclick="syncToCloud()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">↑ Salvar</button>
+      <button onclick="syncFromCloud()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm">↓ Carregar</button>
     </div>
   </div>
 </div>
@@ -1057,6 +1083,82 @@ function loadJSON(e) {
     } catch(err) { alert('Erro: ' + err.message); }
   };
   reader.readAsText(file);
+}
+
+// ====== SYNC (Cloud) ======
+function openSyncModal() {
+  document.getElementById('syncModal').classList.remove('hidden');
+  const saved = localStorage.getItem('horario_escolar_sync_email');
+  if (saved) document.getElementById('syncEmail').value = saved;
+}
+function closeSyncModal() {
+  document.getElementById('syncModal').classList.add('hidden');
+  document.getElementById('syncStatus').textContent = '';
+}
+async function syncToCloud() {
+  const email = document.getElementById('syncEmail').value.trim();
+  const server = document.getElementById('syncServer').value.trim();
+  const status = document.getElementById('syncStatus');
+
+  if (!email || !server) {
+    status.textContent = '❌ Email e URL obrigatórios';
+    return;
+  }
+
+  status.textContent = '⏳ Salvando...';
+  try {
+    const d = currentData();
+    const response = await fetch(`${server}/api/save-grade`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        email,
+        schoolName: state.schools[state.currentSchoolId].name,
+        gradeData: d
+      })
+    });
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const result = await response.json();
+
+    localStorage.setItem('horario_escolar_sync_email', email);
+    localStorage.setItem('horario_escolar_sync_server', server);
+    status.textContent = '✅ Salvo na nuvem';
+    setTimeout(() => closeSyncModal(), 1500);
+    toast('Sincronizado');
+  } catch(e) {
+    status.textContent = `❌ ${e.message}`;
+  }
+}
+async function syncFromCloud() {
+  const email = document.getElementById('syncEmail').value.trim();
+  const server = document.getElementById('syncServer').value.trim();
+  const status = document.getElementById('syncStatus');
+
+  if (!email || !server) {
+    status.textContent = '❌ Email e URL obrigatórios';
+    return;
+  }
+
+  status.textContent = '⏳ Carregando...';
+  try {
+    const schoolName = state.schools[state.currentSchoolId].name;
+    const response = await fetch(`${server}/api/load-grade?email=${encodeURIComponent(email)}&schoolName=${encodeURIComponent(schoolName)}`);
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const result = await response.json();
+
+    state.schools[state.currentSchoolId].data = result.gradeData;
+    saveToStorage();
+    rebuildAreaMap();
+    render();
+
+    status.textContent = '✅ Carregado';
+    setTimeout(() => closeSyncModal(), 1500);
+    toast('Dados atualizados');
+  } catch(e) {
+    status.textContent = `❌ ${e.message}`;
+  }
 }
 
 // ====== INIT ======

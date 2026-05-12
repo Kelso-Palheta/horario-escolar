@@ -1,0 +1,13 @@
+{
+  "name": "horario-escolar",
+  "version": "1.0.0",
+  "description": "Sistema de Gestão de Grade Horária",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static build'"
+  },
+  "dependencies": {
+    "mongodb": "^6.0.0"
+  }
+}
