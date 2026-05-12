@@ -1,5 +1,4 @@
 {
   "buildCommand": "echo 'static'",
-  "outputDirectory": ".",
-  "framework": "static"
+  "outputDirectory": "."
 }
