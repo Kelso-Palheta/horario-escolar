@@ -30,7 +30,7 @@
 <style>
   body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
   .glass { background: rgba(39,39,42,0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
-  .light .glass { background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.08); }
+  .light .glass { background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.12); }
   .area-Linguagens { background: rgba(96, 165, 250, 0.15); border-left: 3px solid #60a5fa; }
   .area-Matemática { background: rgba(251, 146, 60, 0.15); border-left: 3px solid #fb923c; }
   .area-Natureza   { background: rgba(74, 222, 128, 0.15); border-left: 3px solid #4ade80; }
@@ -39,13 +39,13 @@
   .area-Clube      { background: rgba(244, 114, 182, 0.2); border-left: 3px solid #f472b6; }
   .area-Planejamento { background: rgba(234, 179, 8, 0.25); border-left: 3px solid #eab308; }
 
-  .light .area-Linguagens { background: #dbeafe; }
-  .light .area-Matemática { background: #ffedd5; }
-  .light .area-Natureza   { background: #dcfce7; }
-  .light .area-Humanas    { background: #fef9c3; }
-  .light .area-Itinerário { background: #f1f5f9; }
-  .light .area-Clube      { background: #fce7f3; }
-  .light .area-Planejamento { background: #fef3c7; }
+  .light .area-Linguagens { background: #dbeafe; border-left-color: #0284c7; }
+  .light .area-Matemática { background: #ffedd5; border-left-color: #d97706; }
+  .light .area-Natureza   { background: #dcfce7; border-left-color: #059669; }
+  .light .area-Humanas    { background: #fef9c3; border-left-color: #b45309; }
+  .light .area-Itinerário { background: #f1f5f9; border-left-color: #57534e; }
+  .light .area-Clube      { background: #fce7f3; border-left-color: #be185d; }
+  .light .area-Planejamento { background: #fef3c7; border-left-color: #b45309; }
 
   .grid-cell { transition: all .15s; min-height: 60px; }
   .grid-cell:hover { transform: scale(1.02); z-index: 10; box-shadow: 0 4px 20px rgba(255,162,3,0.3); }
@@ -58,10 +58,15 @@
   ::-webkit-scrollbar-thumb:hover { background: #71717a; }
   .light ::-webkit-scrollbar-thumb { background: #cbd5e1; }
 
+  .light input, .light select, .light textarea { background: #f3f4f6 !important; border-color: #d1d5db !important; color: #1f2937 !important; }
+  .light input::placeholder { color: #9ca3af; }
+
   .nav-item { transition: all .15s; }
   .nav-item.active { background: linear-gradient(135deg, rgba(255,162,3,0.2), rgba(255,162,3,0.05)); border-left: 3px solid #FFA203; color:#FFA203; }
   .nav-item:not(.active):hover { background: rgba(255,255,255,0.05); }
-  .light .nav-item:not(.active):hover { background: rgba(0,0,0,0.05); }
+  .light .nav-item { color: #374151; }
+  .light .nav-item.active { background: linear-gradient(135deg, rgba(255,162,3,0.15), rgba(255,162,3,0.05)); color: #d97706; border-left-color: #d97706; }
+  .light .nav-item:not(.active):hover { background: rgba(0,0,0,0.06); }
 
   .badge { display:inline-flex; align-items:center; padding: 2px 8px; border-radius:999px; font-size:11px; font-weight:600; }
   .stat-card { transition: all .2s; }
@@ -78,7 +83,15 @@
 
   .ico { width: 18px; height: 18px; }
   table.grade-table td { border: 1px solid rgba(255,255,255,0.08); padding: 0; }
-  .light table.grade-table td { border-color: rgba(0,0,0,0.08); }
+  .light table.grade-table td { border-color: #e5e7eb; }
+
+  .light body { background: #f9fafb; color: #111827; }
+  .light h1, .light h2, .light h3, .light h4, .light h5, .light h6 { color: #111827; }
+  .light p, .light span, .light div { color: #374151; }
+
+  .light button { color: #1f2937; }
+  .light button:not(:disabled) { background: #e5e7eb; }
+  .light button:hover { background: #d1d5db; }
 </style>
 </head>
 <body class="bg-surface-950 text-surface-100 transition-colors duration-300">
